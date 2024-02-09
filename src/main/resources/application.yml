@@ -1,0 +1,53 @@
+
+spring.application.name : superheroes-api
+
+
+#
+# Maven Properties
+#
+project.name        : @project.name@
+project.version     : @project.version@
+project.description : @project.description@
+
+
+#
+# Docker Compose
+#
+spring.docker.compose.enabled : true
+
+
+#
+# Datasource
+#
+spring.datasource.url : jdbc:mysql://localhost:3306/demo
+spring.datasource.username : hero
+spring.datasource.password : hero
+spring.datasource.driverClassName : com.mysql.cj.jdbc.Driver
+
+
+#
+# Hikari
+#
+spring.datasource.hikari.poolName : Pool-Demo
+spring.datasource.hikari.autoCommit : false
+spring.datasource.hikari.readOnly : false
+spring.datasource.hikari.minimumIdle : 2
+spring.datasource.hikari.maximumPoolSize : 4
+spring.datasource.hikari.connectionTimeout : 30000
+spring.datasource.hikari.idleTimeout : 600000
+spring.datasource.hikari.maxLifetime : 1800000
+spring.datasource.hikari.dataSourceProperties.cachePrepStmts : true
+spring.datasource.hikari.dataSourceProperties.prepStmtCacheSize : 250
+spring.datasource.hikari.dataSourceProperties.prepStmtCacheSqlLimit : 2048
+
+#
+# JPA
+#
+spring.jpa.open-in-view : true
+spring.jpa.hibernate.ddl-auto : none
+spring.jpa.properties.hibernate.format_sql : true
+spring.jpa.properties.hibernate.show_sql : true
+spring.jpa.properties.hibernate.use_sql_comments : false
+spring.jpa.properties.hibernate.connection.charSet : UTF-8
+spring.jpa.properties.hibernate.hbm2ddl.delimiter : ;
+spring.jpa.properties.hibernate.dialect : org.hibernate.dialect.MySQLDialect
