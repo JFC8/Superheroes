@@ -19,7 +19,7 @@ spring.docker.compose.enabled : true
 #
 # Datasource
 #
-spring.datasource.url : jdbc:mysql://localhost:3306/demo
+spring.datasource.url : jdbc:mysql://localhost:3306/hero
 spring.datasource.username : hero
 spring.datasource.password : hero
 spring.datasource.driverClassName : com.mysql.cj.jdbc.Driver
@@ -28,7 +28,7 @@ spring.datasource.driverClassName : com.mysql.cj.jdbc.Driver
 #
 # Hikari
 #
-spring.datasource.hikari.poolName : Pool-Demo
+spring.datasource.hikari.poolName : Pool-Hero
 spring.datasource.hikari.autoCommit : false
 spring.datasource.hikari.readOnly : false
 spring.datasource.hikari.minimumIdle : 2
