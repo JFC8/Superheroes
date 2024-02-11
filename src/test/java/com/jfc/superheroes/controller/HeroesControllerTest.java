@@ -35,4 +35,13 @@ public class HeroesControllerTest extends AbstractIntegrationTest
         ;
     }
 
+    @Test
+    @Order(2)
+    public void retrive_hero_test() throws Exception
+    {
+
+    }
+
+
+
 }

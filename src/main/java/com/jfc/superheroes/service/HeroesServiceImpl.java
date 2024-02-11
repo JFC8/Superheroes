@@ -2,6 +2,7 @@ package com.jfc.superheroes.service;
 
 import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.entities.HeroesEntity;
+import com.jfc.superheroes.exceptions.HeroNotFoundException;
 import com.jfc.superheroes.repository.HeroesRepository;
 import com.jfc.superheroes.utils.CustomModelMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,16 @@ public class HeroesServiceImpl implements HeroesService
     @Autowired
     private CustomModelMapper customModelMapper;
 
+    private HeroesEntity getHeroById( String id )
+    {
+        HeroesEntity heroesEntity = heroesRepository.findById( id ).orElse(null);
+
+        if( heroesEntity == null )
+            throw new HeroNotFoundException( id );
+
+        return heroesEntity;
+    }
+
     @Override
     public Page<HeroDto> find ( HeroDto filter, Pageable pageable )
     {
@@ -36,6 +47,12 @@ public class HeroesServiceImpl implements HeroesService
 
     }
 
+    @Override
+    public HeroDto retrieveHero( String id )
+    {
+        HeroesEntity heroesEntity = getHeroById( id );
+        return customModelMapper.map( heroesEntity, HeroDto.class );
+    }
 
 
 }
