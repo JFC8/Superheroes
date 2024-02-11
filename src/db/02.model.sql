@@ -26,13 +26,11 @@ CREATE TABLE `heroes`
 )
 ;
 
+/* Create Indexes, Uniques, Checks */
+
 ALTER TABLE `heroes`
  ADD CONSTRAINT `UK_heroes_heroname` UNIQUE (`hero_name`)
 ;
-
-
-insert into heroes values (uuid(), 'Spiderman', 'Peter', 'Parker', 'Spider', now(), null);
-commit;
 
 
 SET FOREIGN_KEY_CHECKS=1 ;

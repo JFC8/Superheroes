@@ -4,13 +4,12 @@ import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.entities.HeroesEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -64,7 +63,7 @@ public class CustomHeroesRepositoryImpl extends AbstractCustomRepository impleme
                 SELECT
                     COUNT( 1 ) 
                 FROM
-                    heroes
+                    heroes as hr
                 WHERE
                     1 = 1                         
                 """);
