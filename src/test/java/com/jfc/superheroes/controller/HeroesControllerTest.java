@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class HeroesControllerTest extends AbstractIntegrationTest
 {
     private static final String MODULE = "/heroes";
+    private static final String HEROID = "75523408-c8c7-11ee-8b95-0242ac120002";
     private static final String HERONAME = "Spiderman";
     private static final String FIRSTNAME = "Peter";
     private static final String LASTNAME = "Parker";
@@ -37,8 +38,15 @@ public class HeroesControllerTest extends AbstractIntegrationTest
 
     @Test
     @Order(2)
-    public void retrive_hero_test() throws Exception
+    public void retrieve_hero_test() throws Exception
     {
+        String url = MODULE + "/" + HEROID;
+
+        mockMvc
+                .perform( get(url) )
+                .andDo( print() )
+                .andExpect( status().isOk() )
+        ;
 
     }
 
