@@ -1,9 +1,9 @@
 package com.jfc.superheroes.repository;
 
-import com.jfc.superheroes.entities.HeroesEntity;
+import com.jfc.superheroes.entities.HeroEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HeroesRepository extends JpaRepository<HeroesEntity, String >, CustomHeroesRepository
+public interface HeroesRepository extends JpaRepository<HeroEntity, String >, CustomHeroesRepository
 {
 
 }

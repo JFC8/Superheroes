@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Entity(name="HeroesEntity")
 @Table(name = "heroes")
 @EntityListeners(AuditingEntityListener.class)
-public class HeroesEntity implements Persistable<String>
+public class HeroEntity implements Persistable<String>
 {
     @Id
     @UuidGenerator
@@ -48,7 +48,6 @@ public class HeroesEntity implements Persistable<String>
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Override
-    public boolean isNew() { return getId() == null; }
+    private transient boolean isNew = false;
 
 }

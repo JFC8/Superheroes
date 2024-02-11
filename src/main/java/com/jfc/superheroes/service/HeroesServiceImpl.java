@@ -1,15 +1,17 @@
 package com.jfc.superheroes.service;
 
 import com.jfc.superheroes.dtos.HeroDto;
-import com.jfc.superheroes.entities.HeroesEntity;
+import com.jfc.superheroes.dtos.HeroRequest;
+import com.jfc.superheroes.entities.HeroEntity;
 import com.jfc.superheroes.exceptions.HeroNotFoundException;
 import com.jfc.superheroes.repository.HeroesRepository;
 import com.jfc.superheroes.utils.CustomModelMapper;
+import com.jfc.superheroes.utils.Utils;
+import com.jfc.superheroes.utils.Validations.Validations;
+import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +28,52 @@ public class HeroesServiceImpl implements HeroesService
     @Autowired
     private CustomModelMapper customModelMapper;
 
-    private HeroesEntity getHeroById( String id )
+    private HeroEntity getHeroById(String id )
     {
-        HeroesEntity heroesEntity = heroesRepository.findById( id ).orElse(null);
+        HeroEntity heroEntity = heroesRepository.findById( id ).orElse(null);
 
-        if( heroesEntity == null )
+        if( heroEntity == null )
             throw new HeroNotFoundException( id );
 
-        return heroesEntity;
+        return heroEntity;
+    }
+
+    private boolean isCheckValueForSave( String value, String targetValue )
+    {
+        return ( !Utils.isNullOrEmpty( targetValue ) && !targetValue.equalsIgnoreCase( value ) );
+    }
+
+    private void checkValuesForSave(HeroRequest heroRequest, HeroEntity targetHeroEntity)
+    {
+
+        Validations.ValidationsBuilder aswValidationsBuilder = Validations.builder();
+
+        String targetHeroname = (targetHeroEntity != null) ? targetHeroEntity.getHeroName() : null;
+        if (isCheckValueForSave( heroRequest.getHeroName(), targetHeroname))
+        {
+            if (existHeroName(heroRequest.getHeroName()))
+                aswValidationsBuilder.alreadyExists("username", heroRequest.getHeroName() );
+        }
+
+        aswValidationsBuilder.build().validate();
+    }
+
+    private boolean existHeroName( String heroName )
+    {
+        if( Utils.isNullOrEmpty(heroName) )
+            return false;
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.EXACT);
+
+        HeroEntity exampleHero = HeroEntity.builder().heroName( heroName ).build();
+        return heroesRepository.exists(Example.of( exampleHero, matcher ));
     }
 
     @Override
     public Page<HeroDto> find ( HeroDto filter, Pageable pageable )
     {
-        Page<HeroesEntity> heroesEntityPage = heroesRepository.findAllHeroes( filter, pageable );
+        Page<HeroEntity> heroesEntityPage = heroesRepository.findAllHeroes( filter, pageable );
 
         List<HeroDto> heroDtoList = customModelMapper.map( heroesEntityPage.toList(), HeroDto.class );
 
@@ -50,8 +84,22 @@ public class HeroesServiceImpl implements HeroesService
     @Override
     public HeroDto retrieveHero( String id )
     {
-        HeroesEntity heroesEntity = getHeroById( id );
-        return customModelMapper.map( heroesEntity, HeroDto.class );
+        HeroEntity heroEntity = getHeroById( id );
+        return customModelMapper.map(heroEntity, HeroDto.class );
+    }
+
+
+    @Override
+    public HeroDto createHero(HeroRequest heroRequest)
+    {
+        HeroEntity heroEntity = customModelMapper.map( heroRequest, HeroEntity.class);
+
+        checkValuesForSave ( heroRequest, null );
+        //TODO: COMPROBAR SI EL NOMBRE DE HEROE EXISTE ANTES DE INSERTAR
+        heroEntity.setNew( true );
+        heroEntity = heroesRepository.saveAndFlush(heroEntity);
+
+        return customModelMapper.map(heroEntity, HeroDto.class );
     }
 
 

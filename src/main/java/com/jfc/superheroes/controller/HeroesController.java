@@ -1,7 +1,9 @@
 package com.jfc.superheroes.controller;
 
 import com.jfc.superheroes.dtos.HeroDto;
+import com.jfc.superheroes.dtos.HeroRequest;
 import com.jfc.superheroes.service.HeroesService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +41,12 @@ public class HeroesController
     public ResponseEntity<HeroDto> retrieveHero ( @PathVariable String id )
     {
         return ResponseEntity.ok().body( heroesService.retrieveHero( id ) );
+    }
+
+    @PostMapping
+    public ResponseEntity<HeroDto> createHero (@RequestBody @Valid HeroRequest heroRequest)
+    {
+        return ResponseEntity.ok().body( heroesService.createHero( heroRequest ) );
     }
 
 }

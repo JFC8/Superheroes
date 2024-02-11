@@ -1,7 +1,7 @@
 package com.jfc.superheroes.repository;
 
 import com.jfc.superheroes.dtos.HeroDto;
-import com.jfc.superheroes.entities.HeroesEntity;
+import com.jfc.superheroes.entities.HeroEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -90,7 +90,7 @@ public class CustomHeroesRepositoryImpl extends AbstractCustomRepository impleme
     }
 
     @Override
-    public Page<HeroesEntity> findAllHeroes(HeroDto filter, Pageable pageable )
+    public Page<HeroEntity> findAllHeroes(HeroDto filter, Pageable pageable )
     {
         long total = getTotal( filter );
 
@@ -101,16 +101,16 @@ public class CustomHeroesRepositoryImpl extends AbstractCustomRepository impleme
                 filter.getPower()
         ));
 
-        super.setOrderBy( sql, pageable, HeroesEntity.class, "created_at DESC" );
+        super.setOrderBy( sql, pageable, HeroEntity.class, "created_at DESC" );
 
-        Query query = entityManager.createNativeQuery( sql.toString(), HeroesEntity.class );
+        Query query = entityManager.createNativeQuery( sql.toString(), HeroEntity.class );
         super.setOffsetAndLimit( query, pageable );
         super.setParameter( query, "heroName", filter.getHeroName() );
         super.setParameter( query, "firstName", filter.getFirstName() );
         super.setParameter( query, "lastName", filter.getLastName() );
         super.setParameter( query, "power", filter.getPower() );
 
-        List<HeroesEntity> content = query.getResultList();
+        List<HeroEntity> content = query.getResultList();
 
         return new PageImpl<>( content, pageable, total );
 
