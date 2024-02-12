@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -108,6 +106,19 @@ public class HeroesControllerTest extends AbstractIntegrationTest
                 .perform(put(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(customModelMapper.writeValueAsString(heroRequest)))
+                .andDo( print() )
+                .andExpect( status().isOk() );
+
+    }
+
+    @Test
+    @Order(5)
+    public void delete_hero_test() throws Exception
+    {
+        String url = MODULE + "/" + HEROID;
+
+        mockMvc
+                .perform(delete(url))
                 .andDo( print() )
                 .andExpect( status().isOk() );
 

@@ -24,17 +24,17 @@ public class HeroesController
     private CustomModelMapper customModelMapper;
 
     @GetMapping
-    public ResponseEntity<Page<HeroDto>> find (@RequestParam(required = false) String heroName,
-                                               @RequestParam(required = false) String firstName,
-                                               @RequestParam(required = false) String lastName,
-                                               @RequestParam(required = false) String power,
-                                               Pageable pageable)
+    public ResponseEntity<Page<HeroDto>> find ( @RequestParam(required = false) String heroName,
+                                                @RequestParam(required = false) String firstName,
+                                                @RequestParam(required = false) String lastName,
+                                                @RequestParam(required = false) String power,
+                                                Pageable pageable )
     {
         HeroDto filter = HeroDto.builder()
-                .heroName(heroName)
-                .firstName(firstName)
-                .lastName(lastName)
-                .power(power)
+                .heroName( heroName )
+                .firstName( firstName )
+                .lastName( lastName )
+                .power( power )
                 .build();
 
         return ResponseEntity.ok().body( heroesService.find( filter, pageable) );
@@ -47,14 +47,14 @@ public class HeroesController
     }
 
     @PostMapping
-    public ResponseEntity<HeroDto> createHero (@RequestBody @Valid HeroRequest heroRequest)
+    public ResponseEntity<HeroDto> createHero ( @RequestBody @Valid HeroRequest heroRequest )
     {
         HeroDto heroDto = customModelMapper.map( heroRequest, HeroDto.class );
         return ResponseEntity.ok().body( heroesService.createHero( heroDto ) );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HeroDto> updateHero (@PathVariable String id , @RequestBody @Valid HeroRequest heroRequest )
+    public ResponseEntity<HeroDto> updateHero ( @PathVariable String id , @RequestBody @Valid HeroRequest heroRequest )
     {
         HeroDto heroDto = customModelMapper.map( heroRequest, HeroDto.class );
         heroDto.setId( id );
@@ -62,5 +62,11 @@ public class HeroesController
         return ResponseEntity.ok( heroesService.updateHero ( heroDto ) );
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete( @PathVariable String id )
+    {
+        heroesService.deleteHero( id );
+        return ResponseEntity.ok().build();
+    }
 
 }

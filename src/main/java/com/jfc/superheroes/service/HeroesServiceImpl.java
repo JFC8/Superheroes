@@ -114,4 +114,11 @@ public class HeroesServiceImpl implements HeroesService
         return customModelMapper.map( heroEntity, HeroDto.class);
     }
 
+    @Override
+    public void deleteHero ( String id )
+    {
+        HeroEntity heroEntity = getHeroById( id );
+        heroesRepository.delete( heroEntity );
+    }
+
 }

@@ -11,5 +11,6 @@ public interface HeroesService
     HeroDto retrieveHero( String id );
     HeroDto createHero( HeroDto heroDto );
     HeroDto updateHero( HeroDto heroDto );
+    void deleteHero ( String id );
 
 }
