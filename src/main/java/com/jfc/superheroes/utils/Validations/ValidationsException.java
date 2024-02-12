@@ -2,10 +2,11 @@ package com.jfc.superheroes.utils.Validations;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.validation.FieldError;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.springframework.validation.FieldError;
 
 public class ValidationsException extends ConstraintViolationException
 {

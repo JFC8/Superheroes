@@ -8,7 +8,6 @@ import com.jfc.superheroes.repository.HeroesRepository;
 import com.jfc.superheroes.utils.CustomModelMapper;
 import com.jfc.superheroes.utils.Utils;
 import com.jfc.superheroes.utils.Validations.Validations;
-import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
