@@ -3,6 +3,7 @@ package com.jfc.superheroes.controller;
 import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.dtos.HeroRequest;
 import com.jfc.superheroes.service.HeroesService;
+import com.jfc.superheroes.utils.CustomModelMapper;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class HeroesController
 {
     @Autowired
     private HeroesService heroesService;
+    @Autowired
+    private CustomModelMapper customModelMapper;
 
     @GetMapping
     public ResponseEntity<Page<HeroDto>> find (@RequestParam(required = false) String heroName,
@@ -46,7 +49,18 @@ public class HeroesController
     @PostMapping
     public ResponseEntity<HeroDto> createHero (@RequestBody @Valid HeroRequest heroRequest)
     {
-        return ResponseEntity.ok().body( heroesService.createHero( heroRequest ) );
+        HeroDto heroDto = customModelMapper.map( heroRequest, HeroDto.class );
+        return ResponseEntity.ok().body( heroesService.createHero( heroDto ) );
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HeroDto> updateHero (@PathVariable String id , @RequestBody @Valid HeroRequest heroRequest )
+    {
+        HeroDto heroDto = customModelMapper.map( heroRequest, HeroDto.class );
+        heroDto.setId( id );
+
+        return ResponseEntity.ok( heroesService.updateHero ( heroDto ) );
+    }
+
 
 }

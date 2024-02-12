@@ -37,21 +37,22 @@ public class HeroesServiceImpl implements HeroesService
         return heroEntity;
     }
 
-    private boolean isCheckValueForSave( String value, String targetValue )
+    private boolean isCheckValueForSave( String id, String value, String targetValue )
     {
-        return ( !Utils.isNullOrEmpty( targetValue ) && !targetValue.equalsIgnoreCase( value ) );
+        return ( Utils.isNullOrEmpty(id)
+                || !Utils.isNullOrEmpty( targetValue ) && !targetValue.equalsIgnoreCase( value ) );
     }
 
-    private void checkValuesForSave(HeroRequest heroRequest, HeroEntity targetHeroEntity)
+    private void checkValuesForSave(HeroDto heroDto, HeroEntity targetHeroEntity)
     {
 
         Validations.ValidationsBuilder aswValidationsBuilder = Validations.builder();
 
         String targetHeroname = (targetHeroEntity != null) ? targetHeroEntity.getHeroName() : null;
-        if (isCheckValueForSave( heroRequest.getHeroName(), targetHeroname))
+        if (isCheckValueForSave(heroDto.getId(), heroDto.getHeroName(), targetHeroname))
         {
-            if (existHeroName(heroRequest.getHeroName()))
-                aswValidationsBuilder.alreadyExists("username", heroRequest.getHeroName() );
+            if (existHeroName(heroDto.getHeroName()))
+                aswValidationsBuilder.alreadyExists("heroName", heroDto.getHeroName() );
         }
 
         aswValidationsBuilder.build().validate();
@@ -89,11 +90,11 @@ public class HeroesServiceImpl implements HeroesService
 
 
     @Override
-    public HeroDto createHero(HeroRequest heroRequest)
+    public HeroDto createHero(HeroDto heroDto)
     {
-        HeroEntity heroEntity = customModelMapper.map( heroRequest, HeroEntity.class);
+        HeroEntity heroEntity = customModelMapper.map( heroDto, HeroEntity.class);
 
-        checkValuesForSave ( heroRequest, null );
+        checkValuesForSave ( heroDto, null );
         //TODO: COMPROBAR SI EL NOMBRE DE HEROE EXISTE ANTES DE INSERTAR
         heroEntity.setNew( true );
         heroEntity = heroesRepository.saveAndFlush(heroEntity);
@@ -101,5 +102,16 @@ public class HeroesServiceImpl implements HeroesService
         return customModelMapper.map(heroEntity, HeroDto.class );
     }
 
+    @Override
+    public HeroDto updateHero( HeroDto heroDto )
+    {
+        HeroEntity targetHeroEntity = getHeroById( heroDto.getId() );
+        checkValuesForSave(heroDto, targetHeroEntity);
+
+        HeroEntity heroEntity = customModelMapper.map( heroDto, targetHeroEntity );
+        heroEntity = heroesRepository.saveAndFlush( heroEntity );
+
+        return customModelMapper.map( heroEntity, HeroDto.class);
+    }
 
 }

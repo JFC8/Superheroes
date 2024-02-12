@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,6 +88,28 @@ public class HeroesControllerTest extends AbstractIntegrationTest
         HeroDto returnedHeroDto = customModelMapper.readValue(responseJson, HeroDto.class);
 
         createHeroId = returnedHeroDto.getId();
+
+    }
+
+    @Test
+    @Order(4)
+    public void update_hero_test() throws Exception
+    {
+        String url = MODULE + "/" + HEROID;
+
+        HeroRequest heroRequest = HeroRequest.builder()
+                .heroName( HERONAME )
+                .firstName( FIRSTNAME )
+                .lastName( LASTNAME )
+                .power( "Arachnid sense" )
+                .build();
+
+        mockMvc
+                .perform(put(url)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(customModelMapper.writeValueAsString(heroRequest)))
+                .andDo( print() )
+                .andExpect( status().isOk() );
 
     }
 

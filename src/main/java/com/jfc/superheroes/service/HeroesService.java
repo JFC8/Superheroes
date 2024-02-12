@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface HeroesService
 {
-    Page<HeroDto> find (HeroDto filter, Pageable pageable);
+    Page<HeroDto> find ( HeroDto filter, Pageable pageable );
     HeroDto retrieveHero( String id );
-    HeroDto createHero(HeroRequest heroRequest);
+    HeroDto createHero( HeroDto heroDto );
+    HeroDto updateHero( HeroDto heroDto );
 
 }
