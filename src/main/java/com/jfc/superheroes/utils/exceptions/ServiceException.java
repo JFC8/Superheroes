@@ -1,7 +1,7 @@
 package com.jfc.superheroes.utils.exceptions;
 
 
-public class ServiceException extends Exception {
+public class ServiceException extends CustomException {
     public static final String ERROR_CODE = "service_unavailable";
 
     public ServiceException() {

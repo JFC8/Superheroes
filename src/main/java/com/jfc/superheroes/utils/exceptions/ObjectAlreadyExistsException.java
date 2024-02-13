@@ -1,6 +1,6 @@
 package com.jfc.superheroes.utils.exceptions;
 
-public class ObjectAlreadyExistsException extends Exception {
+public class ObjectAlreadyExistsException extends CustomException {
     public static final String ERROR_CODE = "object_already_exists";
 
     public ObjectAlreadyExistsException(String objectName) {

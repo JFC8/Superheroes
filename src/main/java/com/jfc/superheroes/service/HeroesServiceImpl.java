@@ -1,13 +1,13 @@
 package com.jfc.superheroes.service;
 
 import com.jfc.superheroes.dtos.HeroDto;
-import com.jfc.superheroes.dtos.HeroRequest;
 import com.jfc.superheroes.entities.HeroEntity;
 import com.jfc.superheroes.exceptions.HeroNotFoundException;
 import com.jfc.superheroes.repository.HeroesRepository;
 import com.jfc.superheroes.utils.CustomModelMapper;
 import com.jfc.superheroes.utils.Utils;
 import com.jfc.superheroes.utils.Validations.Validations;
+import com.jfc.superheroes.utils.log.AswLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -18,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@AswLog
 @Transactional(rollbackFor = Throwable.class)
 public class HeroesServiceImpl implements HeroesService
 {
@@ -95,7 +96,7 @@ public class HeroesServiceImpl implements HeroesService
         HeroEntity heroEntity = customModelMapper.map( heroDto, HeroEntity.class);
 
         checkValuesForSave ( heroDto, null );
-        //TODO: COMPROBAR SI EL NOMBRE DE HEROE EXISTE ANTES DE INSERTAR
+
         heroEntity.setNew( true );
         heroEntity = heroesRepository.saveAndFlush(heroEntity);
 

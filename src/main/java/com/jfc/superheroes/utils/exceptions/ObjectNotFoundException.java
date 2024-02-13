@@ -1,6 +1,6 @@
 package com.jfc.superheroes.utils.exceptions;
 
-public class ObjectNotFoundException extends Exception {
+public class ObjectNotFoundException extends CustomException {
     public static final String ERROR_CODE = "object_not_found";
 
     public ObjectNotFoundException(String objectName) {

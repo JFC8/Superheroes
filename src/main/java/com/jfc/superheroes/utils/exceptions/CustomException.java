@@ -4,30 +4,34 @@ import com.jfc.superheroes.utils.Utils;
 
 import java.time.LocalDateTime;
 
-public class Exception extends RuntimeException{
+public class CustomException extends RuntimeException{
     private final String errorId;
     private final LocalDateTime timestamp;
     private final String errorCode;
     private final String message;
 
-    protected Exception() {
+    protected CustomException() {
         this((String)null);
     }
 
-    protected Exception(String errorCode) {
+    protected CustomException(String errorCode) {
         this(errorCode, (String)null, (Throwable)null);
     }
 
-    protected Exception(String errorCode, String message) {
+    protected CustomException(String errorCode, String message) {
         this(errorCode, message, (Throwable)null);
     }
 
-    protected Exception(String errorCode, String message, Throwable cause) {
+    protected CustomException(String errorCode, String message, Throwable cause) {
         super(cause);
         this.errorId = Utils.generateUUID();
         this.timestamp = LocalDateTime.now();
         this.errorCode = errorCode;
         this.message = message;
+    }
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+        return this;
     }
 
     public String getErrorId() {
