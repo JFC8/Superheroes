@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @AutoConfigureBefore({ErrorMvcAutoConfiguration.class})
 @Import({BaseConfiguration.class})
-@PropertySource({"classpath:application-base.yml"})
+@PropertySource({"classpath:application.yml"})
 public class BaseAutoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(BaseAutoConfiguration.class);
 

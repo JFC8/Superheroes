@@ -3,6 +3,7 @@ package com.jfc.superheroes.controller;
 import com.jfc.superheroes.AbstractIntegrationTest;
 import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.dtos.HeroRequest;
+import com.jfc.superheroes.factory.HeroFactory;
 import com.jfc.superheroes.utils.CustomModelMapper;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -17,16 +18,8 @@ public class HeroesControllerTest extends AbstractIntegrationTest
 {
     @Autowired
     private CustomModelMapper customModelMapper;
-
     private static final String MODULE = "/heroes";
-    private static final String HEROID = "75523408-c8c7-11ee-8b95-0242ac120002";
-    private static final String HERONAME = "Spiderman";
-    private static final String FIRSTNAME = "Peter";
-    private static final String LASTNAME = "Parker";
-    private static final String POWER = "Spider";
     private static String createHeroId;
-
-
 
     @Test
     @Order(1)
@@ -34,12 +27,14 @@ public class HeroesControllerTest extends AbstractIntegrationTest
     {
         String url = getUrl(MODULE);
 
+        HeroRequest heroRequest = HeroFactory.getHeroRequest();
+
         mockMvc
                 .perform(get(url)
-                        .queryParam("heroName", HERONAME)
-                        .queryParam("firstName", FIRSTNAME)
-                        .queryParam("lastName", LASTNAME)
-                        .queryParam("power", POWER)
+                        .queryParam("heroName", heroRequest.getHeroName() )
+                        .queryParam("firstName", heroRequest.getFirstName() )
+                        .queryParam("lastName", heroRequest.getLastName() )
+                        .queryParam("power", heroRequest.getPower() )
                         .queryParam("page", "0")
                         .queryParam("size", "10"))
                 .andDo( print() )
@@ -51,7 +46,7 @@ public class HeroesControllerTest extends AbstractIntegrationTest
     @Order(2)
     public void retrieve_hero_test() throws Exception
     {
-        String url = MODULE + "/" + HEROID;
+        String url = MODULE + "/" + HeroFactory.HEROID;
 
         mockMvc
                 .perform( get(url) )
@@ -93,14 +88,10 @@ public class HeroesControllerTest extends AbstractIntegrationTest
     @Order(4)
     public void update_hero_test() throws Exception
     {
-        String url = MODULE + "/" + HEROID;
+        String url = MODULE + "/" + HeroFactory.HEROID;
 
-        HeroRequest heroRequest = HeroRequest.builder()
-                .heroName( HERONAME )
-                .firstName( FIRSTNAME )
-                .lastName( LASTNAME )
-                .power( "Arachnid sense" )
-                .build();
+        HeroRequest heroRequest =  HeroFactory.getHeroRequest();
+        heroRequest.setPower("Arachnid sense");
 
         mockMvc
                 .perform(put(url)
@@ -115,7 +106,7 @@ public class HeroesControllerTest extends AbstractIntegrationTest
     @Order(5)
     public void delete_hero_test() throws Exception
     {
-        String url = MODULE + "/" + HEROID;
+        String url = MODULE + "/" + HeroFactory.HEROID;
 
         mockMvc
                 .perform(delete(url))
