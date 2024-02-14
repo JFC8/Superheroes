@@ -3,6 +3,7 @@ package com.jfc.superheroes.Utils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -24,7 +25,7 @@ public class IntegrationTest
     public static final String DEFAULT_HOST = "localhost";
     @LocalServerPort
     protected int port;
-    //@Value("${server.servlet.context-path}")
+    @Value("${server.servlet.context-path}")
     protected String context;
     @Autowired
     protected TestRestTemplate testRestTemplate;
