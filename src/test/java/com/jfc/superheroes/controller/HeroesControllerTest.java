@@ -4,7 +4,7 @@ import com.jfc.superheroes.AbstractIntegrationTest;
 import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.dtos.HeroRequest;
 import com.jfc.superheroes.factory.HeroFactory;
-import com.jfc.superheroes.utils.CustomModelMapper;
+import com.jfc.superheroes.utils.mappers.AswObjectMapper;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class HeroesControllerTest extends AbstractIntegrationTest
 {
     @Autowired
-    private CustomModelMapper customModelMapper;
+    private AswObjectMapper aswObjectMapper;
     private static final String MODULE = "/heroes";
     private static String createHeroId;
 
@@ -73,12 +73,12 @@ public class HeroesControllerTest extends AbstractIntegrationTest
                 mockMvc
                 .perform(post(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(customModelMapper.writeValueAsString(heroRequest)))
+                        .content(aswObjectMapper.writeValueAsString(heroRequest)))
                 .andDo( print() )
                 .andExpect( status().isOk() )
                 .andReturn().getResponse().getContentAsString();
 
-        HeroDto returnedHeroDto = customModelMapper.readValue(responseJson, HeroDto.class);
+        HeroDto returnedHeroDto = aswObjectMapper.readValue(responseJson, HeroDto.class);
 
         createHeroId = returnedHeroDto.getId();
 
@@ -96,7 +96,7 @@ public class HeroesControllerTest extends AbstractIntegrationTest
         mockMvc
                 .perform(put(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(customModelMapper.writeValueAsString(heroRequest)))
+                        .content(aswObjectMapper.writeValueAsString(heroRequest)))
                 .andDo( print() )
                 .andExpect( status().isOk() );
 
