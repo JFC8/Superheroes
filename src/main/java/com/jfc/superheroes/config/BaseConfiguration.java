@@ -12,6 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 @Configuration(
         proxyBeanMethods = false
 )
@@ -38,5 +39,6 @@ public class BaseConfiguration {
     public AswModelMapper aswModelMapper() {
         return new AswModelMapperImpl();
     }
+
 
 }

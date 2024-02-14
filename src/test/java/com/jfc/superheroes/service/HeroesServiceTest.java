@@ -2,51 +2,82 @@ package com.jfc.superheroes.service;
 
 import com.jfc.superheroes.AbstractIntegrationTest;
 import com.jfc.superheroes.dtos.HeroDto;
-import com.jfc.superheroes.dtos.HeroRequest;
 import com.jfc.superheroes.entities.HeroEntity;
-import com.jfc.superheroes.factory.HeroFactory;
+import com.jfc.superheroes.exceptions.HeroNotFoundException;
 import com.jfc.superheroes.repository.HeroesRepository;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 public class HeroesServiceTest extends AbstractIntegrationTest
 {
-    @Mock
+
+    @MockBean
     private HeroesRepository heroesRepository;
 
-    @InjectMocks
+    @Autowired
     private HeroesServiceImpl heroesService;
 
-    private HeroRequest heroRequest;
-    private HeroDto heroDto;
-    private HeroEntity heroEntity;
+        @Test
+        @Order(1)
+        public void whenGivenId_shouldReturnHero_ifFound()
+        {
+            HeroDto heroDto = HeroDto.builder()
+                    .id("75523408-c8c7-11ee-8b95-0242ac120002")
+                    .heroName("Spiderman")
+                    .firstName("Peter")
+                    .lastName("Parker")
+                    .power("Spider")
+                    .build();
 
-    @BeforeEach
-    public void setup(){
-        heroRequest = HeroFactory.getHeroRequest();
-        heroDto = HeroFactory.getHeroDto();
-        heroEntity = HeroFactory.getHeroEntity();
-    }
+            HeroEntity heroEntity = HeroEntity.builder()
+                    .id("75523408-c8c7-11ee-8b95-0242ac120002")
+                    .heroName("Spiderman")
+                    .firstName("Peter")
+                    .lastName("Parker")
+                    .power("Spider")
+                    .build();
 
-    @Test
-    @Order(1)
-    public void whenSaveHeroShouldReturnHero()
-    {
-        given(heroesRepository.save(heroEntity)).willReturn(heroEntity);
+            given(heroesRepository.findById( heroDto.getId() )).willReturn( Optional.of( heroEntity ) );
 
-        HeroDto savedHero = heroesService.createHero(heroDto);
+            HeroDto savedHeroDto = heroesService.retrieveHero( heroDto.getId() );
 
-        assertThat(savedHero).isNotNull();
-    }
+            assertThat( savedHeroDto.getHeroName() ).isEqualTo( heroDto.getHeroName() );
+        }
+
+        @Test
+        @Order(2)
+        public void givenExistingHeroName_whenSaveHero_thenTrhowsException()
+        {
+            HeroDto heroDto = HeroDto.builder()
+                    .id("75523408-c8c7-11ee-8b95-0242ac120003")
+                    .heroName("Spiderman")
+                    .firstName("Peter")
+                    .lastName("Parker")
+                    .power("Spider")
+                    .build();
+
+            when( heroesRepository.findByHeroName(heroDto.getHeroName())).thenReturn(null);
+
+            try{
+                heroesService.createHero(heroDto);
+            }catch ( HeroNotFoundException heroNotFoundException ){
+                assertThat( heroNotFoundException.getErrorCode() ).isEqualTo("hero_not_found");
+            }catch (Exception e){
+                assertThat(1).isEqualTo(0);
+                System.out.println("Not the correct exception");
+            }
+
+
+        }
 
 
 
