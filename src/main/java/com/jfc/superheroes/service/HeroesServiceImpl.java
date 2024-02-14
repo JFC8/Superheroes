@@ -4,10 +4,10 @@ import com.jfc.superheroes.dtos.HeroDto;
 import com.jfc.superheroes.entities.HeroEntity;
 import com.jfc.superheroes.exceptions.HeroNotFoundException;
 import com.jfc.superheroes.repository.HeroesRepository;
-import com.jfc.superheroes.utils.CustomModelMapper;
 import com.jfc.superheroes.utils.Utils;
 import com.jfc.superheroes.utils.Validations.Validations;
 import com.jfc.superheroes.utils.log.AswLog;
+import com.jfc.superheroes.utils.mappers.AswModelMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -26,7 +26,7 @@ public class HeroesServiceImpl implements HeroesService
     private HeroesRepository heroesRepository;
 
     @Autowired
-    private CustomModelMapper customModelMapper;
+    private AswModelMapper aswModelMapper;
 
     private HeroEntity getHeroById(String id )
     {
@@ -76,7 +76,7 @@ public class HeroesServiceImpl implements HeroesService
     {
         Page<HeroEntity> heroesEntityPage = heroesRepository.findAllHeroes( filter, pageable );
 
-        List<HeroDto> heroDtoList = customModelMapper.map( heroesEntityPage.toList(), HeroDto.class );
+        List<HeroDto> heroDtoList = aswModelMapper.map( heroesEntityPage.toList(), HeroDto.class );
 
         return new PageImpl<>( heroDtoList, heroesEntityPage.getPageable(), heroesEntityPage.getTotalElements() );
 
@@ -86,21 +86,21 @@ public class HeroesServiceImpl implements HeroesService
     public HeroDto retrieveHero( String id )
     {
         HeroEntity heroEntity = getHeroById( id );
-        return customModelMapper.map(heroEntity, HeroDto.class );
+        return aswModelMapper.map(heroEntity, HeroDto.class );
     }
 
 
     @Override
     public HeroDto createHero(HeroDto heroDto)
     {
-        HeroEntity heroEntity = customModelMapper.map( heroDto, HeroEntity.class);
+        HeroEntity heroEntity = aswModelMapper.map( heroDto, HeroEntity.class);
 
         checkValuesForSave ( heroDto, null );
 
         heroEntity.setNew( true );
         heroEntity = heroesRepository.saveAndFlush(heroEntity);
 
-        return customModelMapper.map(heroEntity, HeroDto.class );
+        return aswModelMapper.map(heroEntity, HeroDto.class );
     }
 
     @Override
@@ -109,10 +109,10 @@ public class HeroesServiceImpl implements HeroesService
         HeroEntity targetHeroEntity = getHeroById( heroDto.getId() );
         checkValuesForSave(heroDto, targetHeroEntity);
 
-        HeroEntity heroEntity = customModelMapper.map( heroDto, targetHeroEntity );
+        HeroEntity heroEntity = aswModelMapper.map( heroDto, targetHeroEntity );
         heroEntity = heroesRepository.saveAndFlush( heroEntity );
 
-        return customModelMapper.map( heroEntity, HeroDto.class);
+        return aswModelMapper.map( heroEntity, HeroDto.class);
     }
 
     @Override
